@@ -6,7 +6,7 @@ var util = require("util"),
 	http = require("http").Server(app),			
 	io = require("socket.io")(http),				
 	Player = require("./Player").Player,
-	port = 80;	
+	port = process.env.PORT || 8000;	
 
 /**************************************************
 ** APPLICATION ROUTING
