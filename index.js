@@ -5,7 +5,8 @@ var util = require("util"),
 	app = require("express")(),	
 	http = require("http").Server(app),			
 	io = require("socket.io")(http),				
-	Player = require("./Player").Player;	
+	Player = require("./Player").Player,
+	port = process.env.PORT || 8000;	
 
 /**************************************************
 ** APPLICATION ROUTING
@@ -32,8 +33,8 @@ function init() {
 	// Create an empty array to store players
 	players = [];
 
-	http.listen(8000, function(){
-		util.log("BitStrike started! Listening on " + 8000 + "...");
+	http.listen(port, function(){
+		util.log("BitStrike started! Listening on " + port + "...");
 		io.on("connection", function onSocketConnection(client) {
 
 			// Listen for client disconnected
