@@ -31,7 +31,7 @@ function init() {
 
 	// Start listening for events
 	setEventHandlers();
-};
+}
 
 
 /**************************************************
@@ -44,8 +44,6 @@ var setEventHandlers = function() {
 
 	// Window resize
 	window.addEventListener("resize", onResize, false);
-
-	onSocketConnect();
 
 	// Send chat message
  	$("form").submit(function(){
@@ -67,28 +65,30 @@ var setEventHandlers = function() {
 
 	// Player removed message received
 	socket.on("remove-player", onRemovePlayer);
+
+	onSocketConnect();
 };
 
 // Keyboard key down
 function onKeydown(e) {
 	if (localPlayer) {
 		keys.onKeyDown(e);
-	};
-};
+	}
+}
 
 // Keyboard key up
 function onKeyup(e) {
 	if (localPlayer) {
 		keys.onKeyUp(e);
-	};
-};
+	}
+}
 
 // Browser window resize
 function onResize(e) {
 	// Maximise the canvas
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-};
+}
 
 // Chat message received
 function onChatMessage(msg){
@@ -111,12 +111,12 @@ function onSocketConnect() {
 
 	// Send local player data to the game server
 	socket.emit("new-player", {x: localPlayer.getX(), y: localPlayer.getY(), name: localPlayer.name});
-};
+}
 
 // Socket disconnected
 function onSocketDisconnect() {
 	console.log("Disconnected from BitStrike!");
-};
+}
 
 // New player
 function onNewPlayer(data) {
@@ -129,22 +129,23 @@ function onNewPlayer(data) {
 
 	// Add new player to the remote players array
 	remotePlayers.push(newPlayer);
-};
+}
 
 // Move player
 function onMovePlayer(data) {
 	var movePlayer = playerById(data.id);
+	console.log(movePlayer.name + " is moving");
 
 	// Player not found
 	if (!movePlayer) {
 		console.log("Player not found: "+data.id);
 		return;
-	};
+	}
 
 	// Update player position
 	movePlayer.setX(data.x);
 	movePlayer.setY(data.y);
-};
+}
 
 // Remove player
 function onRemovePlayer(data) {
@@ -154,11 +155,11 @@ function onRemovePlayer(data) {
 	if (!removePlayer) {
 		console.log("Player not found: "+data.id);
 		return;
-	};
+	}
 
 	// Remove player from array
 	remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-};
+}
 
 
 /**************************************************
@@ -170,7 +171,7 @@ function animate() {
 
 	// Request a new animation frame using Paul Irish's shim
 	window.requestAnimFrame(animate);
-};
+}
 
 
 /**************************************************
@@ -180,9 +181,9 @@ function update() {
 	// Update local player and check for change
 	if (localPlayer.update(keys)) {
 		// Send local player data to the game server
-		socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-	};
-};
+		socket.emit("move-player", {x: localPlayer.getX(), y: localPlayer.getY()});
+	}
+}
 
 
 /**************************************************
@@ -199,8 +200,8 @@ function draw() {
 	var i;
 	for (i = 0; i < remotePlayers.length; i++) {
 		remotePlayers[i].draw(ctx);
-	};
-};
+	}
+}
 
 
 /**************************************************
@@ -212,7 +213,7 @@ function playerById(id) {
 	for (i = 0; i < remotePlayers.length; i++) {
 		if (remotePlayers[i].id == id)
 			return remotePlayers[i];
-	};
+	}
 	
 	return false;
-};
+}

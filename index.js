@@ -45,6 +45,7 @@ function init() {
 			// Listen for move player message
 			client.on("move-player", onMovePlayer);
 
+			// Listen for chat messages
 			client.on("chat-message", onChatMessage);
 
 		});

@@ -25,19 +25,26 @@ var Player = function(startX, startY) {
 	};
 
 	var update = function(keys) {
+		var moved = false;
 		// Up key takes priority over down
 		if (keys.up) {
 			y -= moveAmount;
+			moved = true;
 		} else if (keys.down) {
 			y += moveAmount;
-		};
+			moved = true;
+		}
 
 		// Left key takes priority over right
 		if (keys.left) {
 			x -= moveAmount;
+			moved = true;
 		} else if (keys.right) {
 			x += moveAmount;
-		};
+			moved = true;
+		}
+
+		return moved;
 	};
 
 	var draw = function(ctx) {
@@ -51,5 +58,5 @@ var Player = function(startX, startY) {
 		setY: setY,
 		update: update,
 		draw: draw
-	}
+	};
 };

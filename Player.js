@@ -30,14 +30,14 @@ var Player = function(startX, startY) {
 			y -= moveAmount;
 		} else if (keys.down) {
 			y += moveAmount;
-		};
+		}
 
 		// Left key takes priority over right
 		if (keys.left) {
 			x -= moveAmount;
 		} else if (keys.right) {
 			x += moveAmount;
-		};
+		}
 	};
 
 	var draw = function(ctx) {
@@ -51,5 +51,9 @@ var Player = function(startX, startY) {
 		setY: setY,
 		update: update,
 		draw: draw
-	}
+	};
 };
+
+// Export the Player class so you can use it in
+// other files by using require("Player").Player
+exports.Player = Player;
