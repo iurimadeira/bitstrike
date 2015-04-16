@@ -2,6 +2,7 @@
   "name": "bitstrike",
   "version": "0.0.1",
   "description": "third person multiplayer shooter",
+  "main": "index.js",
   "dependencies": {
     "express": "^4.12.3",
     "socket.io": "^1.3.5"
