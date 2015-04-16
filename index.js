@@ -1,31 +1,141 @@
-var app = require("express")();
-var http = require("http").Server(app);
-var io = require("socket.io")(http);
+/**************************************************
+** NODE.JS REQUIREMENTS
+**************************************************/
+var util = require("util"),	
+	app = require("express")(),	
+	http = require("http").Server(app),			
+	io = require("socket.io")(http),				
+	Player = require("./Player").Player;	
+
+/**************************************************
+** APPLICATION ROUTING
+**************************************************/
 
 app.get("/", function(req, res){
-	res.sendFile(__dirname + "/index.html");
-})
-
-io.on("connection", function(socket){
-	var username;
-
-	socket.on("user-connected", function(name){
-		username = name;
-		console.log(name + " joined the game.");
-		io.emit("user-connected", username);
-	});
-
-	socket.on("chat-message", function(msg){
-		console.log("message: " + msg);
-		io.emit("chat-message", msg);
-	});
-
-	socket.on("disconnect", function(socket){
-		console.log(username + " has left the game.");
-		io.emit("user-disconnected", username);
-	});
+	res.sendFile(__dirname + "/public/index.html");
 });
 
-http.listen(3000, function(){
-	console.log("BitStrike started! Listening on " + 3000 + "...");
+app.get("/public/:filename", function(req, res){
+	res.sendFile(__dirname + "/public/" + req.params.filename);
 });
+
+/**************************************************
+** GAME VARIABLES
+**************************************************/
+var players;	// Array of connected players
+
+
+/**************************************************
+** GAME INITIALISATION
+**************************************************/
+function init() {
+	// Create an empty array to store players
+	players = [];
+
+	http.listen(8000, function(){
+		util.log("BitStrike started! Listening on " + 8000 + "...");
+		io.on("connection", function onSocketConnection(client) {
+
+			// Listen for client disconnected
+			client.on("disconnect", onClientDisconnect);
+
+			// Listen for new player message
+			client.on("new-player", onNewPlayer);
+
+			// Listen for move player message
+			client.on("move-player", onMovePlayer);
+
+			client.on("chat-message", onChatMessage);
+
+		});
+	});
+	
+}
+
+// Chat message received
+function onChatMessage(msg){
+	util.log("[CHAT] " + msg);
+	this.broadcast.emit("chat-message", msg);
+}
+
+// Socket client has disconnected
+function onClientDisconnect() {
+	util.log(playerById(this.id).name + "(" + this.id + ") left the game.");
+
+	var removePlayer = playerById(this.id);
+
+	// Player not found
+	if (!removePlayer) {
+		util.log("Player not found: "+this.id);
+		return;
+	}
+
+	// Remove player from players array
+	players.splice(players.indexOf(removePlayer), 1);
+
+	// Broadcast removed player to connected socket clients
+	this.broadcast.emit("remove-player", {id: this.id});
+}
+
+// New player has joined
+function onNewPlayer(data) {
+	util.log(data.name + "(" + this.id + ") joined the game.");
+
+	// Create a new player
+	var newPlayer = new Player(data.x, data.y);
+	newPlayer.id = this.id;
+	newPlayer.name = data.name;
+
+	// Broadcast new player to connected socket clients
+	this.broadcast.emit("new-player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY(), name: newPlayer.name});
+
+	// Send existing players to the new player
+	var i, existingPlayer;
+	for (i = 0; i < players.length; i++) {
+		existingPlayer = players[i];
+		this.emit("new-player", {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY(), name: existingPlayer.name});
+	}
+		
+	// Add new player to the players array
+	players.push(newPlayer);
+}
+
+// Player has moved
+function onMovePlayer(data) {
+	// Find player in array
+	var movePlayer = playerById(this.id);
+
+	// Player not found
+	if (!movePlayer) {
+		util.log("Player not found: "+this.id);
+		return;
+	}
+
+	// Update player position
+	movePlayer.setX(data.x);
+	movePlayer.setY(data.y);
+
+	// Broadcast updated position to connected socket clients
+	this.broadcast.emit("move-player", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
+}
+
+
+/**************************************************
+** GAME HELPER FUNCTIONS
+**************************************************/
+// Find player by ID
+function playerById(id) {
+	var i;
+	for (i = 0; i < players.length; i++) {
+		if (players[i].id == id)
+			return players[i];
+	}
+	
+	return false;
+}
+
+
+/**************************************************
+** RUN THE GAME
+**************************************************/
+init();
