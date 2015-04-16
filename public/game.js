@@ -183,6 +183,9 @@ function update() {
 		// Send local player data to the game server
 		socket.emit("move-player", {x: localPlayer.getX(), y: localPlayer.getY()});
 	}
+
+	// Updates the window title
+	document.title = "BitStrike - " + localPlayer.name;
 }
 
 
