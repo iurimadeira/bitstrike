@@ -55,9 +55,9 @@ function init() {
 }
 
 // Chat message received
-function onChatMessage(msg){
-	util.log("[CHAT] " + msg);
-	this.broadcast.emit("chat-message", msg);
+function onChatMessage(data){
+	util.log("[CHAT] " + data.name + " : " + data.msg);
+	this.broadcast.emit("chat-message", {"msg" : data.msg, "name": data.name});
 }
 
 // Socket client has disconnected

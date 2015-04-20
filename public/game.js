@@ -91,8 +91,8 @@ function onResize(e) {
 }
 
 // Chat message received
-function onChatMessage(msg){
-	console.log(msg);
+function onChatMessage(data){
+	console.log("[CHAT] " + data.name + ": " + data.msg);
 }
 
 // Socket connected
@@ -134,7 +134,6 @@ function onNewPlayer(data) {
 // Move player
 function onMovePlayer(data) {
 	var movePlayer = playerById(data.id);
-	console.log(movePlayer.name + " is moving");
 
 	// Player not found
 	if (!movePlayer) {

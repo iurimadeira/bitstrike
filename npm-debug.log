@@ -1,0 +1,39 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/iuri/.nvm/versions/io.js/v1.6.4/bin/iojs',
+1 verbose cli   '/home/iuri/.nvm/versions/io.js/v1.6.4/bin/npm',
+1 verbose cli   'start' ]
+2 info using npm@2.7.5
+3 info using node@v1.6.4
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info prestart bitstrike@0.0.1
+6 info start bitstrike@0.0.1
+7 verbose unsafe-perm in lifecycle true
+8 info bitstrike@0.0.1 Failed to exec start script
+9 verbose stack Error: bitstrike@0.0.1 start: `node index.js`
+9 verbose stack Exit status 1
+9 verbose stack     at EventEmitter.<anonymous> (/home/iuri/.nvm/versions/io.js/v1.6.4/lib/node_modules/npm/lib/utils/lifecycle.js:213:16)
+9 verbose stack     at emitTwo (events.js:87:13)
+9 verbose stack     at EventEmitter.emit (events.js:169:7)
+9 verbose stack     at ChildProcess.<anonymous> (/home/iuri/.nvm/versions/io.js/v1.6.4/lib/node_modules/npm/lib/utils/spawn.js:14:12)
+9 verbose stack     at emitTwo (events.js:87:13)
+9 verbose stack     at ChildProcess.emit (events.js:169:7)
+9 verbose stack     at maybeClose (child_process.js:984:16)
+9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1057:5)
+10 verbose pkgid bitstrike@0.0.1
+11 verbose cwd /home/iuri/workspace/bitstrike
+12 error Linux 3.13.0-49-generic
+13 error argv "/home/iuri/.nvm/versions/io.js/v1.6.4/bin/iojs" "/home/iuri/.nvm/versions/io.js/v1.6.4/bin/npm" "start"
+14 error node v1.6.4
+15 error npm  v2.7.5
+16 error code ELIFECYCLE
+17 error bitstrike@0.0.1 start: `node index.js`
+17 error Exit status 1
+18 error Failed at the bitstrike@0.0.1 start script 'node index.js'.
+18 error This is most likely a problem with the bitstrike package,
+18 error not with npm itself.
+18 error Tell the author that this fails on your system:
+18 error     node index.js
+18 error You can get their info via:
+18 error     npm owner ls bitstrike
+18 error There is likely additional logging output above.
+19 verbose exit [ 1, true ]
